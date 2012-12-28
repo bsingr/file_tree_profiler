@@ -13,24 +13,11 @@ module FileTreeProfiler
     def profile
       @root = begin
         if ::File.directory? path
-          lookup_dir(RootDirFile.new(path, ::File.basename(path)))
+          RootDirFile.new(path)
         else
           raise "profiling data files not possible"
         end
       end
-    end
-
-    def lookup_dir dir_file
-      Dir.foreach(dir_file.path) do |entry|
-        next if (entry == '..' || entry == '.')
-        full_path = ::File.join(dir_file.path, entry)
-        if ::File.directory?(full_path)
-          dir_file << lookup_dir(DirFile.new(dir_file, entry))
-        else
-          dir_file << DataFile.new(dir_file, entry)
-        end
-      end
-      dir_file
     end
 
     def size
@@ -57,11 +44,20 @@ module FileTreeProfiler
 
     def initialize *args
       super *args
-      @children = []
+      lookup
     end
 
-    def << child
-      children.push child
+    def lookup
+      @children = []
+      Dir.foreach(self.path) do |entry|
+        next if (entry == '..' || entry == '.')
+        full_path = ::File.join(self.path, entry)
+        if ::File.directory?(full_path)
+          children.push DirFile.new(self, entry)
+        else
+          children.push DataFile.new(self, entry)
+        end
+      end
     end
 
     def empty?
@@ -86,10 +82,10 @@ module FileTreeProfiler
   class RootDirFile < DirFile
     attr_reader :path
 
-    def initialize *args
-      super *args
-      @path = @parent
-      @parent = nil
+    def initialize path
+      @path = path
+      @name = ::File.basename(path)
+      lookup
     end
 
     def parent
