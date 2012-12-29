@@ -21,11 +21,10 @@ describe FileTreeProfiler do
       it 'has no parent' do
         lambda { subject.parent}.should raise_error
       end
-      
+
       it 'has child folders' do
         subject.children.map(&:name).should == %w[ a b ]
       end
-
 
     end
   end
