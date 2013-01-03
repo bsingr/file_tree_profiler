@@ -12,6 +12,9 @@ describe FileTreeProfiler do
     lambda { described_class.profile(path) }.should \
       raise_error(ArgumentError, "Not a directory - #{path}")
   end
+
+  it 'csv' do
+    described_class.csv(profile, 'test')
   end
 
   context :profile do
