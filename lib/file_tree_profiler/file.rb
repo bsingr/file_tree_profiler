@@ -10,5 +10,9 @@ module FileTreeProfiler
     def path
       ::File.join(parent.path, name)
     end
+
+    def inspect
+      "<#{self.class} @name=#{name} #path=#{path}>"
+    end
   end
 end
