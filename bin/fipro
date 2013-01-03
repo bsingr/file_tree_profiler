@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+
+lib = File.expand_path('../../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'file_tree_profiler'
+
+dir_name = ARGV.first
+
+puts "Profiling #{dir_name}..."
+$profile = FileTreeProfiler.profile dir_name
+puts "Profiling done!"
+
+case ARGV.last
+when /\.csv$/
+  puts "Writing CSV Report into #{ARGV.last}"
+  FileTreeProfiler.csv $profile, ARGV.last
+when /\.sqlite3$/
+  puts "Writing SQL Report into #{ARGV.last}"
+  FileTreeProfiler.sql $profile, "sqlite://#{ARGV.last}"
+else
+  puts "Starting console, please call $profile"
+  ARGV.clear
+  require 'irb'
+  IRB.start
+end
