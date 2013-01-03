@@ -8,8 +8,8 @@ Gem::Specification.new do |gem|
   gem.version       = FileTreeProfiler::VERSION
   gem.authors       = ["Jens Bissinger"]
   gem.email         = ["mail@jens-bissinger.de"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{Generates a profile of a given directory.}
+  gem.summary       = %q{Analysed directory structure and file contents.}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($/)
@@ -18,5 +18,5 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency 'sequel'
-  gem.add_dependency 'sqlite3'
+  gem.add_development_dependency 'sqlite3'
 end
