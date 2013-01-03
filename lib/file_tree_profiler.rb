@@ -5,6 +5,7 @@ require 'file_tree_profiler/data_file'
 require 'file_tree_profiler/dir_file'
 require 'file_tree_profiler/profile'
 require 'file_tree_profiler/export/csv'
+require 'file_tree_profiler/export/sql'
 
 module FileTreeProfiler
   def self.profile path
@@ -15,5 +16,7 @@ module FileTreeProfiler
     Export::CSV.new profile, basename
   end
 
+  def self.sql profile, config
+    Export::SQL.new profile, config
   end
 end
