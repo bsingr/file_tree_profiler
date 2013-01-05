@@ -14,6 +14,7 @@ describe FileTreeProfiler::DataFile do
     its(:checksum) { should == described_class::EMPTY_CHECKSUM }
     its(:name) { should == 'empty.txt' }
     its(:empty?) { should be_true }
+    it_behaves_like :file_on_root_level
   end
 
   context :not_empty do
@@ -23,5 +24,6 @@ describe FileTreeProfiler::DataFile do
     its(:checksum) { should == 'a5e54d1fd7bb69a228ef0dcd2431367e' }
     its(:name) { should == 'a.txt' }
     its(:empty?) { should be_false }
+    it_behaves_like :file_on_root_level
   end
 end

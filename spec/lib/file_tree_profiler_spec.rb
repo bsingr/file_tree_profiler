@@ -19,7 +19,7 @@ describe FileTreeProfiler do
 
   context :profile do
     subject { profile }
-    its(:size) {should == 8}
+    its(:size) {should == 10}
     its(:root) {should be_instance_of(described_class::DirFile)}
 
     context :root do
