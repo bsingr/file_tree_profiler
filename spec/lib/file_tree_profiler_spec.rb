@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe FileTreeProfiler do
-  let(:profile) { described_class.profile(example_folder) }
+  let(:profile) { described_class.profile(example_folder('profile-level-folder')) }
 
   it 'profiles' do
     profile.should be_instance_of(described_class::Profile)
@@ -24,7 +24,7 @@ describe FileTreeProfiler do
 
   context :profile do
     subject { profile }
-    its(:size) {should == 10}
+    its(:size) {should == 8}
     its(:root) {should be_instance_of(described_class::DirFile)}
 
     context :root do
@@ -32,11 +32,11 @@ describe FileTreeProfiler do
 
       its(:checksum) { should_not == described_class::DirFile::EMPTY_CHECKSUM }
       its(:checksum) { should be_instance_of(String) }
-      its(:name) { should == File.basename(example_folder) }
+      its(:name) { should == 'profile-level-folder' }
       its(:path) { should include(example_folder) }
 
-      it 'has child folders' do
-        subject.children.map(&:name).should == %w[ a b empty ]
+      it 'has children' do
+        subject.children.map(&:name).should == %w[ a b c.txt ]
       end
 
     end
