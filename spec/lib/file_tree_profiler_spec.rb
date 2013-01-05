@@ -17,6 +17,11 @@ describe FileTreeProfiler do
     described_class.csv(profile, 'test')
   end
 
+  it 'sql' do
+    File.unlink('rspec.sqlite3') if File.exists?('rspec.sqlite3')
+    described_class.sql(profile, 'sqlite://rspec.sqlite3')
+  end
+
   context :profile do
     subject { profile }
     its(:size) {should == 10}
