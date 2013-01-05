@@ -22,10 +22,11 @@ module FileTreeProfiler
         end unless db.table_exists? :roots
         db.create_table :files do
           primary_key :id
-          foreign_key :root_id, :roots
+          foreign_key :root_id
           String :type
           String :name
           String :path
+          String :relative_path
           String :checksum
           Boolean :empty
           Integer :size
@@ -40,6 +41,7 @@ module FileTreeProfiler
           :root_id => root_id,
           :type => (file.class == DirFile ? 'dir' : 'data'),
           :path => file.path,
+          :relative_path => file.relative_path,
           :name => file.name,
           :checksum => file.checksum,
           :empty => file.empty?,

@@ -13,7 +13,7 @@ module FileTreeProfiler
       end
 
       def write_line csv, file
-        csv << [file.class, file.path, file.name, file.checksum, file.empty?, file.size]
+        csv << [file.class, file.path, file.relative_path, file.name, file.checksum, file.empty?, file.size]
       end
 
       def profile csv, dir_file
