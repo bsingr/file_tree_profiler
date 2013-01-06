@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe FileTreeProfiler::Merge::Files do
+describe FileTreeProfiler::Merge::Pairing do
   let(:source) do
     mock(:source).tap do |source|
       source.stub(:checksum).and_return('a1')

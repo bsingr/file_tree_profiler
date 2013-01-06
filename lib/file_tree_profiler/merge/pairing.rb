@@ -1,6 +1,6 @@
 module FileTreeProfiler
   class Merge
-    class Files
+    class Pairing
       EQUAL       = 1
       DIFFERENT   = 2
       ONLY_SOURCE = 3

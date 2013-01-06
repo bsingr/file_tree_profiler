@@ -46,33 +46,33 @@ describe FileTreeProfiler::Profile do
             ["/", "/foo", "/foo/bar.txt", "/foo/foo.txt", "/foo2", "/foo2/bar.txt", "/foo2/baz", "/foo2/baz/foo.txt", "/foo2/foo.txt", "/foo2/baz.txt", "/partially_different.txt"]
         end
 
-        shared_examples_for :merge_file do |relative_path, expected_status, expected_status_leaf|
+        shared_examples_for :pairing do |relative_path, expected_status, expected_status_leaf|
           expected_status = {
-            :equal => FileTreeProfiler::Merge::Files::EQUAL,
-            :different => FileTreeProfiler::Merge::Files::DIFFERENT,
-            :only_target => FileTreeProfiler::Merge::Files::ONLY_TARGET,
-            :only_source => FileTreeProfiler::Merge::Files::ONLY_SOURCE
+            :equal => FileTreeProfiler::Merge::Pairing::EQUAL,
+            :different => FileTreeProfiler::Merge::Pairing::DIFFERENT,
+            :only_target => FileTreeProfiler::Merge::Pairing::ONLY_TARGET,
+            :only_source => FileTreeProfiler::Merge::Pairing::ONLY_SOURCE
           }[expected_status] || raise("unknown status = '#{expected_status}'")
           context relative_path do
             subject { merge[relative_path] }
             its(:relative_path) { should == relative_path }
             its(:parent_relative_path) { should == ::File.dirname(relative_path) }
             its(:name) { should == ::File.basename(relative_path) }
-            its(:class) { should == FileTreeProfiler::Merge::Files }
+            its(:class) { should == FileTreeProfiler::Merge::Pairing }
             its(:status) { should == expected_status }
             its(:status_leaf) { should == expected_status_leaf }
           end
         end
 
-        include_examples :merge_file, '/foo', :equal, true
-        include_examples :merge_file, '/foo/bar.txt', :equal, false
-        include_examples :merge_file, '/foo/foo.txt', :equal, false
-        include_examples :merge_file, '/partially_different.txt', :only_target, true
-        include_examples :merge_file, '/foo2/baz', :equal, true
-        include_examples :merge_file, '/foo2/baz/foo.txt', :equal, false
-        include_examples :merge_file, '/foo2/bar.txt', :only_source, true
-        include_examples :merge_file, '/foo2/baz.txt', :only_target, true
-        include_examples :merge_file, '/foo2/foo.txt', :different, false
+        include_examples :pairing, '/foo', :equal, true
+        include_examples :pairing, '/foo/bar.txt', :equal, false
+        include_examples :pairing, '/foo/foo.txt', :equal, false
+        include_examples :pairing, '/partially_different.txt', :only_target, true
+        include_examples :pairing, '/foo2/baz', :equal, true
+        include_examples :pairing, '/foo2/baz/foo.txt', :equal, false
+        include_examples :pairing, '/foo2/bar.txt', :only_source, true
+        include_examples :pairing, '/foo2/baz.txt', :only_target, true
+        include_examples :pairing, '/foo2/foo.txt', :different, false
       end
     end
   end

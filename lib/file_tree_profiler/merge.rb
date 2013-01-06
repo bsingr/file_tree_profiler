@@ -20,7 +20,7 @@ module FileTreeProfiler
 
     def add scope, file
       key = file.relative_path
-      files[key] ||= Files.new
+      files[key] ||= Pairing.new
       files[key].add scope, file
     end
 
