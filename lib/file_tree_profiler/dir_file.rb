@@ -11,10 +11,11 @@ module FileTreeProfiler
     # collects all children as DirFile or DataFile objects
     # and is invoked on each collected DirFile object
     def walk
+      FileTreeProfiler.monitor_report(:profile, :dir, path)
       @children = []
-      Dir.foreach(self.path) do |entry|
+      Dir.foreach(path) do |entry|
         next if (entry == '..' || entry == '.')
-        full_path = ::File.join(self.path, entry)
+        full_path = ::File.join(path, entry)
         if ::File.directory?(full_path)
           children.push DirFile.new(self, entry)
         else

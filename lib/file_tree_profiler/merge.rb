@@ -10,6 +10,7 @@ module FileTreeProfiler
       merge :target, target_profile.root
       
       pairings.each do |relative_path, f|
+        FileTreeProfiler.monitor_report :merge_finalize, relative_path
         if parent_relative_path = f.parent_relative_path
           if parent = self[parent_relative_path]
             f.status_leaf = parent.status != f.status
@@ -25,6 +26,7 @@ module FileTreeProfiler
     end
 
     def merge scope, dir_file
+      FileTreeProfiler.monitor_report :merge_map, :dir, dir_file.path
       add scope, dir_file
       dir_file.children.each do |child|
         if child.class == DirFile

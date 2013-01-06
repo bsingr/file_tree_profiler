@@ -10,6 +10,23 @@ require 'file_tree_profiler/export/csv'
 require 'file_tree_profiler/export/sql'
 
 module FileTreeProfiler
+  def self.monitor_report(*args)
+    @@monitor.report(*args) if monitoring?
+  end
+
+  def self.monitoring?
+    defined?(@@monitoring) && @@monitoring == true
+  end
+
+  def self.with_monitoring(monitor)
+    @@monitor = monitor
+    @@monitoring = true
+    yield
+  ensure
+    @@monitor = false
+    @@monitoring = false
+  end
+
   def self.profile path
     Profile.new path
   end
