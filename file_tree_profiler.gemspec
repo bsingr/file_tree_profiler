@@ -20,4 +20,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'sequel'
   gem.add_development_dependency 'sqlite3'
   gem.add_development_dependency 'guard-rspec'
+  gem.add_development_dependency 'rspec-nc'
 end
