@@ -42,7 +42,7 @@ describe FileTreeProfiler::Profile do
         its(:size) { should == 11 }
 
         specify do
-          subject.files.map{|k,v| k}.should == \
+          subject.pairings.map{|k,v| k}.should == \
             ["/", "/foo", "/foo/bar.txt", "/foo/foo.txt", "/foo2", "/foo2/bar.txt", "/foo2/baz", "/foo2/baz/foo.txt", "/foo2/foo.txt", "/foo2/baz.txt", "/partially_different.txt"]
         end
 
