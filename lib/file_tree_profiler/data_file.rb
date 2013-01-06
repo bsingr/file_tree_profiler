@@ -12,6 +12,9 @@ module FileTreeProfiler
       end.to_s
     rescue Errno::ELOOP => e
       puts "path=#{path} is a circular ref"
+    rescue Errno::ENOENT => e
+      puts "got deleted while profiling!!!"
+      @checksum = EMPTY_CHECKSUM
     end
 
     def size
