@@ -39,49 +39,40 @@ describe FileTreeProfiler::Profile do
       context :merge do
         let(:merge) { FileTreeProfiler::Merge.new(profile_a, profile_c) }
         subject { merge }
-        its(:size) { should == 5 }
+        its(:size) { should == 11 }
 
         specify do
           subject.files.map{|k,v| k}.should == \
-            ["/", "/foo", "/foo/bar.txt", "/foo/foo.txt", "/partially_different.txt"]
+            ["/", "/foo", "/foo/bar.txt", "/foo/foo.txt", "/foo2", "/foo2/bar.txt", "/foo2/baz", "/foo2/baz/foo.txt", "/foo2/foo.txt", "/foo2/baz.txt", "/partially_different.txt"]
         end
 
-        context '/foo' do
-          subject { merge['/foo'] }
-          its(:class) { should == FileTreeProfiler::Merge::Files }
-          its(:name) { should == 'foo'}
-          its(:relative_path) { should == '/foo' }
-          its(:parent_relative_path) { should == '/' }
-          its(:status) { should == FileTreeProfiler::Merge::Files::EQUAL }
-          its(:status_leaf) { should == true }
+        shared_examples_for :merge_file do |relative_path, expected_status, expected_status_leaf|
+          expected_status = {
+            :equal => FileTreeProfiler::Merge::Files::EQUAL,
+            :different => FileTreeProfiler::Merge::Files::DIFFERENT,
+            :only_target => FileTreeProfiler::Merge::Files::ONLY_TARGET,
+            :only_source => FileTreeProfiler::Merge::Files::ONLY_SOURCE
+          }[expected_status] || raise("unknown status = '#{expected_status}'")
+          context relative_path do
+            subject { merge[relative_path] }
+            its(:relative_path) { should == relative_path }
+            its(:parent_relative_path) { should == ::File.dirname(relative_path) }
+            its(:name) { should == ::File.basename(relative_path) }
+            its(:class) { should == FileTreeProfiler::Merge::Files }
+            its(:status) { should == expected_status }
+            its(:status_leaf) { should == expected_status_leaf }
+          end
         end
-        context '/foo/bar.txt' do
-          subject { merge['/foo/bar.txt'] }
-          its(:class) { should == FileTreeProfiler::Merge::Files }
-          its(:name) { should == 'bar.txt'}
-          its(:relative_path) { should == '/foo/bar.txt' }
-          its(:parent_relative_path) { should == '/foo' }
-          its(:status) { should == FileTreeProfiler::Merge::Files::EQUAL }
-          its(:status_leaf) { should == false }
-        end 
-        context '/foo/foo.txt' do
-          subject { merge['/foo/foo.txt'] }
-          its(:class) { should == FileTreeProfiler::Merge::Files }
-          its(:name) { should == 'foo.txt'}
-          its(:relative_path) { should == '/foo/foo.txt' }
-          its(:parent_relative_path) { should == '/foo' }
-          its(:status) { should == FileTreeProfiler::Merge::Files::EQUAL }
-          its(:status_leaf) { should == false }
-        end 
-        context '/partially_different.txt' do
-          subject { merge['/partially_different.txt'] }
-          its(:class) { should == FileTreeProfiler::Merge::Files }
-          its(:name) { should == 'partially_different.txt'}
-          its(:relative_path) { should == '/partially_different.txt' }
-          its(:parent_relative_path) { should == '/' }
-          its(:status) { should == FileTreeProfiler::Merge::Files::ONLY_TARGET }
-          its(:status_leaf) { should == true }
-        end
+
+        include_examples :merge_file, '/foo', :equal, true
+        include_examples :merge_file, '/foo/bar.txt', :equal, false
+        include_examples :merge_file, '/foo/foo.txt', :equal, false
+        include_examples :merge_file, '/partially_different.txt', :only_target, true
+        include_examples :merge_file, '/foo2/baz', :equal, true
+        include_examples :merge_file, '/foo2/baz/foo.txt', :equal, false
+        include_examples :merge_file, '/foo2/bar.txt', :only_source, true
+        include_examples :merge_file, '/foo2/baz.txt', :only_target, true
+        include_examples :merge_file, '/foo2/foo.txt', :different, false
       end
     end
   end
